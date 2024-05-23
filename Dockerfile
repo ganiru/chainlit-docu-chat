@@ -8,10 +8,10 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed dependencies specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Set environment variables
 ENV PYTHONUNBUFFERED 1
 
 # Command to run the app
-CMD python -m chainlit run apppp.py
+CMD python -m chainlit run apppp.py -h --host 0.0.0.0 --port ${PORT}
