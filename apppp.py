@@ -34,6 +34,9 @@ async def on_chat_start():
             max_files=10,
             timeout=180, # Set a timeout for user response,
         ).send()
+    
+    msg = cl.Message(content=f"Processing `{files[0].name}`...", disable_feedback=True)
+    await msg.send()
 
     # Process each uploaded file
     texts = []
@@ -109,19 +112,21 @@ async def main(message: cl.Message):
     text_elements = [] # Initialize list to store text elements
     
     # Process source documents if available
-    if source_documents:
-        for source_idx, source_doc in enumerate(source_documents):
-            source_name = f"source_{source_idx}"
+    #if source_documents:
+    #    for source_idx, source_doc in enumerate(source_documents):
+    #        source_name = f"source_{source_idx}"
             # Create the text element referenced in the message
-            text_elements.append(
-                cl.Text(content=source_doc.page_content, name=source_name)
-            )
-        source_names = [text_el.name for text_el in text_elements]
+    #        text_elements.append(
+    #            cl.Text(content=source_doc.page_content, name=source_name)
+    #        )
+    #    source_names = [text_el.name for text_el in text_elements]
         
          # Add source references to the answer
-        if source_names:
-            answer += f"\nSources: {', '.join(source_names)}"
-        else:
-            answer += "\nNo sources found"
+    #    if source_names:
+    #        answer += f"\nSources: {', '.join(source_names)}"
+    #    else:
+    #        answer += "\nNo sources found"
     #return results
     await cl.Message(content=answer, elements=text_elements).send()
+
+    
