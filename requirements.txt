@@ -5,6 +5,7 @@ langchain_community
 PyPDF2
 groq
 langchain-groq
-ollama
+#ollama
 python-dotenv
 chromadb
+langchain_openai
