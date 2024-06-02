@@ -60,7 +60,7 @@ name = "V.Assistant"
 show_readme_as_default = true
 
 # Description of the app and chatbot. This is used for HTML tags.
-# description = ""
+description = "Chat with PDFs"
 
 # Large size content are by default collapsed for a cleaner ui
 default_collapse_content = true

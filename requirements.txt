@@ -2,7 +2,8 @@
 chainlit
 langchain
 langchain_community
-PyPDF2
+#PyPDF2
+pymupdf
 groq
 langchain-groq
 #ollama
