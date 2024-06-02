@@ -18,10 +18,10 @@ load_dotenv()
 groq_api_key = os.environ['GROQ_API_KEY']
 
 # Initializing GROQ chat with provided API key, model name, and settings
-llm_groq = ChatGroq(
-            groq_api_key=groq_api_key, model_name="llama3-70b-8192",
-                         temperature=0.2)
+llm_groq = ChatGroq(groq_api_key=groq_api_key, model_name="llama3-70b-8192", temperature=0.2)
 
+    # Create a Chroma vector store
+embeddings = OpenAIEmbeddings(); #OllamaEmbeddings(model="nomic-embed-text")
 
 @cl.on_chat_start
 async def on_chat_start():
@@ -61,8 +61,6 @@ async def on_chat_start():
         file_metadatas = [{"source": f"{i}-{file.name}"} for i in range(len(file_texts))]
         metadatas.extend(file_metadatas)
 
-    # Create a Chroma vector store
-    embeddings = OpenAIEmbeddings(); #OllamaEmbeddings(model="nomic-embed-text")
     docsearch = await cl.make_async(Chroma.from_texts)(
         texts, embeddings, metadatas=metadatas
     )
@@ -112,23 +110,6 @@ async def main(message: cl.Message):
     source_documents = res["source_documents"] 
 
     text_elements = [] # Initialize list to store text elements
-    
-    # Process source documents if available
-    #if source_documents:
-    #    for source_idx, source_doc in enumerate(source_documents):
-    #        source_name = f"source_{source_idx}"
-            # Create the text element referenced in the message
-    #        text_elements.append(
-    #            cl.Text(content=source_doc.page_content, name=source_name)
-    #        )
-    #    source_names = [text_el.name for text_el in text_elements]
-        
-         # Add source references to the answer
-    #    if source_names:
-    #        answer += f"\nSources: {', '.join(source_names)}"
-    #    else:
-    #        answer += "\nNo sources found"
-    #return results
     await cl.Message(content=answer, elements=text_elements).send()
 
     
