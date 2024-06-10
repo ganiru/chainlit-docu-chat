@@ -2,13 +2,13 @@ import os
 import chainlit as cl
 from chainlit.types import AskFileResponse
 from dotenv import load_dotenv
-from langchain_community.document_loaders import PyMuPDFLoader, TextLoader
+from langchain_community.document_loaders import PyMuPDFLoader, TextLoader, Docx2txtLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores.chroma import Chroma
 from langchain.chains.conversational_retrieval.base import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
-
+from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_groq import ChatGroq
 
@@ -27,7 +27,7 @@ embeddings_model = OpenAIEmbeddings(api_key=os.environ['OPENAI_API_KEY'])
 
 @cl.on_chat_start
 async def start():
-    await cl.Message(content="Hello. Please upload a file using the attach button.").send()
+    await cl.Message(content="Hello. Please upload a PDF file or a Word document using the button in the chat box.").send()
 
 async def handle_file_upload(file: AskFileResponse):
     await process_file(file)
@@ -38,6 +38,10 @@ async def process_file(file: AskFileResponse):
         loader = PyMuPDFLoader(file.path)
     elif file.mime == "text/plain":
         loader = TextLoader(file.path)
+    elif file.mime == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+        loader = Docx2txtLoader(file.path)
+    elif file.mime == "text/csv":
+        loader = CSVLoader(file.path)
 
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
@@ -64,7 +68,6 @@ async def on_message(msg: cl.Message):
     # handle file attachment
     if msg.elements:
         # Clear existing documents
-        await cl.Message(content="Processing the document. Please wait ...").send()
         my_db = Chroma()
         for collection in my_db._client.list_collections():
             ids = collection.get()['ids']
@@ -72,10 +75,13 @@ async def on_message(msg: cl.Message):
             if len(ids): collection.delete(ids)
 
         # Processing images exclusively
-        documents = [file.path for file in msg.elements if file.mime.endswith("pdf")]
+        await cl.Message(content="Processing the document. Please wait ...").send()
+        documents = [file.path for file in msg.elements if file.mime.endswith("pdf") or file.name.endswith("docx") or file.mime == "text/csv"] 
+
+        # print(msg.elements)
 
         if not documents:
-            await cl.Message(content="No PDF attached").send()
+            await cl.Message(content="Please select a PDF or a Word document").send()
             return
         
         doc_search = process_pdfs(documents)

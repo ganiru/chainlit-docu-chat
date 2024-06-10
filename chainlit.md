@@ -1,14 +1,8 @@
-# Welcome to Chainlit! 🚀🤖
+# Welcome to Docuchat! 🚀🤖
 
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
+Why waste time searching through pages in a document to find what you're looking for, when you can just ASK the document itself? Introducing Docuchat, a chatbot that can help you find answers to your questions in your document.
 
-## Useful Links 🔗
+## Easy to use
 
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
+Just attach your document in the chat, and ask away! Currently, it only works with PDFs and Word documents.
 
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
-
-## Welcome screen
-
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
